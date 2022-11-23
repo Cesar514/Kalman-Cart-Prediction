@@ -1,0 +1,10 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find socspioneer)/config/demo.rviz"/>
+    <node name="stage" pkg="stage_ros" type="stageros" args="--clock $(find socspioneer)/data/meeting.world"/>
+
+    <node name="slam" pkg="gmapping" type="slam_gmapping" args="scan:=base_scan">
+        <!-- To receive less warnings but get less publications. See: http://wiki.ros.org/gmapping-->
+        <param name="transform_publish_period" value="0.08"/>
+    </node>
+</launch>

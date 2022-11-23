@@ -1,0 +1,23 @@
+<launch>
+        <!-- start p2os and laser nodes -->
+       	<include file="$(find socspioneer)/p2os_laser.launch" /> 
+	
+	<!-- enable teleoperation via joystick -->
+	<include file="$(find socspioneer)/teleop_joy.launch" />
+	
+	<!-- launch robot description file -->
+	<param name="robot_description" command="cat $(find p2os_urdf)/defs/pioneer3dx.urdf.xacro" />
+	
+	<!-- publish robot description -->
+	<include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch" />
+	
+	
+
+	<!-- transform each of the 8 sonar sensors into robot_base -->
+	
+        <node pkg="tf" type="static_transform_publisher" name="stp_sonar0" output="screen" args=" base_link sonar_0 100" />
+
+
+<!-- END TRANSFORMS -->
+
+</launch>
