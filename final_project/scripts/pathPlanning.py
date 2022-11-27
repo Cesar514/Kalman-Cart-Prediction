@@ -2,7 +2,7 @@
 #This is an implementation of A* algorithm
 
 #Imports of ros, math, heap library, copy, and transformations for quaternions
-import rospy, math, heapq, copy, tf.transformations
+import rospy, math, heapq, copy, tf.transformations, pickle
 
 #Import for map, current position, and to display path
 from nav_msgs.msg import OccupancyGrid, Odometry, Path
@@ -14,6 +14,7 @@ from geometry_msgs.msg import Point, PointStamped, Pose, PoseStamped, PoseWithCo
 from visualization_msgs.msg import MarkerArray, Marker
 from std_msgs.msg import Float32MultiArray
 
+""""Select the type of calculation that is going to run"""
 calcMode = "manhattan"
 #calcMode = "euclidean"
 #calcMode = "average"
@@ -38,6 +39,10 @@ enablePlanning = True
 batteryTotal = 100.00
 batteryTimeIn = 0
 batteryTimeOut = 0 
+minimunBattery = 30
+#minimunBattery = -1000000000
+with open('src/final_project/scripts/battery.txt', 'rb') as f:
+    batteryTotal = pickle.load(f)
 
 
 class Moving:
@@ -319,14 +324,17 @@ class TrajectoryPlanner:
         myClickedPoint = myPoint
 
     def new_goal_callback(self, myGoal):
-        global distance, varDist, batteryTotal, batteryTimeIn, batteryTimeOut, enablePlanning
+        global distance, varDist, batteryTotal, batteryTimeIn, batteryTimeOut, enablePlanning, trackingMode, minimunBattery
 
         batteryTimeOut = rospy.Time.now().to_sec() 
-        if(batteryTimeOut - batteryTimeIn > 1):    
+        if(batteryTimeOut - batteryTimeIn > 5):    
             batteryTotal = batteryTotal - 1
-            rospy.loginfo("CurrentBattery: ", batteryTotal)
+            rospy.loginfo("CurrentBattery: " + str(batteryTotal))
             batteryTimeIn = rospy.Time.now().to_sec()
-            if batteryTotal <= 30:
+            with open('src/final_project/scripts/battery.txt', 'wb') as f:
+                pickle.dump(batteryTotal, f)
+
+            if batteryTotal <= minimunBattery:
                 trackingMode = "battery"
                 #enablePlanning = True
             else:
@@ -408,11 +416,11 @@ class TrajectoryPlanner:
             
             if batteryEuclidean <= 1.1:
                 trackingMode = savedMode
+                batteryTotal = 100.0
             
             goal_pose.pose = closestBattery
 
             #trackingMode = "none"
-
 
         if trackingMode == "selection":
             self.rate = rospy.Rate(0.3) # Hz
@@ -550,11 +558,8 @@ class TrajectoryPlanner:
                 break
         return path, theMovements, pathMarker
 
-    def reached_goal(self, goalReached: False):
-        return goalReached
-
-
-
+    #def reached_goal(self, goalReached: False):
+     #   return goalReached
 
 
 def main():
