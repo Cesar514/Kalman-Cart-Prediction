@@ -96,7 +96,7 @@ floorplan
 
 # throw in a robot
 pioneer( pose [ 6 -16.5 0 90.0 ] name "robot" color "blue")
-human( pose [ 16.5 -15.5 0 135.000 ] name "human" color "red")
+human( pose [ -1 -13.5 0 90.000 ] name "human" color "red")
 
 # batteries in the map
 block( pose [ -2 -14.5 0 0 ] name "batteryOne")

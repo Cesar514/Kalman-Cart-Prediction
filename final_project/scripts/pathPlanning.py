@@ -19,13 +19,25 @@ calcMode = "manhattan"
 #calcMode = "average"
 
 #trackingMode = "battery"
-#trackingMode = "human"
+trackingMode = "human"
 #trackingMode = "paying"
-trackingMode = "selection"
+#trackingMode = "selection"
+
+savedMode = trackingMode
+#savedModeTwo =  trackingMode
+
 
 myClickedPoint = Point()
-distance = 0.7
-varDist = 0.1
+distance = 0.7 #Distance from objective
+varDist = 0.1 #Distance from exact position each step
+
+savedGoal = None
+savedEuclidean = 0.0
+enablePlanning = True
+
+batteryTotal = 100.00
+batteryTimeIn = 0
+batteryTimeOut = 0 
 
 
 class Moving:
@@ -186,7 +198,7 @@ class State:
         return marker
 
 #Function for planning movement based on heaps https://www.youtube.com/watch?v=58cYFs_W2_s
-def replan(map, Movements, robot, start, goal, pub):
+def replan(map, Movements, robot, start, goal):
     robot_dimension = min(robot.width, robot.height)
 
     final_state = None
@@ -198,7 +210,7 @@ def replan(map, Movements, robot, start, goal, pub):
         q = heapq.heappop(opened)[1]
         for Movement in Movements:
             successor = q.try_apply(map, Movement, robot)
-            #pub.publish(q.to_pose_stamped())
+
             if successor is not None:
                 if successor.eucl_dist(goal) < robot_dimension + distance: #Distance from goals
                     final_state = successor
@@ -246,7 +258,6 @@ class robot_moving():
 
         return goal
 
-
 class TrajectoryPlanner:
     def __init__(self):
         
@@ -256,7 +267,7 @@ class TrajectoryPlanner:
         self.pathFound = False
             # forward #backward #right90 # left90
         self.Movements = [Moving(0.1, 0), Moving(-0.1, 0), Moving(0, -1.5708), Moving(0, 1.5708)] 
-        self.robot = Robot(1, 1)
+        self.robot = Robot(0.85, 0.85)
         self.is_working = False
         self.currentRobotPosition = Pose()
 
@@ -273,20 +284,22 @@ class TrajectoryPlanner:
         self.map_subscriber = rospy.Subscriber("/clicked_point", PointStamped, self.saved_point)
 
         # Publishes trajectory in MarkerArray Mode
-        self.path_publisher = rospy.Publisher("trajectory", MarkerArray, queue_size=100)
-        
-        # For debugging
-        self.pose_publisher = rospy.Publisher("debug_pose", PoseStamped, queue_size=1)
+        self.path_publisher = rospy.Publisher("trajectory", MarkerArray, queue_size=30)
         
         # Publishes the trajectory in correct order
-        self.real_publisher = rospy.Publisher("ordered_path", Path, queue_size=1001)
+        self.real_publisher = rospy.Publisher("ordered_path", Path, queue_size=30)
 
         # Sends the message with the positions of the trajectory
-        self.message_publisher = rospy.Publisher("list_movements", Float32MultiArray, queue_size=100)
+        self.message_publisher = rospy.Publisher("list_movements", Float32MultiArray, queue_size=30)
 
         self.planner = replan
 
     def ready_to_plan(self):
+        global savedEuclidean
+        if self.map is not None and self.start is not None and self.goal is not None:
+            if savedGoal != None:
+                savedEuclidean = self.euclidean_distance(self.goal.x, self.goal.y, savedGoal.x, savedGoal.y)
+            #rospy.loginfo(savedEuclidean)
         return self.map is not None and self.start is not None and self.goal is not None
 
     def euclidean_distance(self, xBat, yBat, xCurr, yCurr):
@@ -306,14 +319,24 @@ class TrajectoryPlanner:
         myClickedPoint = myPoint
 
     def new_goal_callback(self, myGoal):
-        global distance
-        global varDist
+        global distance, varDist, batteryTotal, batteryTimeIn, batteryTimeOut, enablePlanning
+
+        batteryTimeOut = rospy.Time.now().to_sec() 
+        if(batteryTimeOut - batteryTimeIn > 1):    
+            batteryTotal = batteryTotal - 1
+            rospy.loginfo("CurrentBattery: ", batteryTotal)
+            batteryTimeIn = rospy.Time.now().to_sec()
+            if batteryTotal <= 30:
+                trackingMode = "battery"
+                #enablePlanning = True
+            else:
+                trackingMode = savedMode
 
         if trackingMode == "human":
             goal_pose = PoseStamped()
             goal_pose.header = myGoal.header
             goal_pose.pose = myGoal.pose.pose
-            distance = 0.6
+            distance = 0.15
             varDist = 0.1
         
         if trackingMode == "paying":
@@ -343,47 +366,53 @@ class TrajectoryPlanner:
             Battery7 (12.5 -14.5)
             """
             #Saves battery 1 position
-            savedEuclidean = self.euclidean_distance(-2,-14.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            batteryEuclidean = self.euclidean_distance(-2,-14.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
             closestBattery.position.x = -2
             closestBattery.position.y = -14.5
             
             #Saves battery 2 position
-            if(self.euclidean_distance(-16,-3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < savedEuclidean):
-                savedEuclidean = self.euclidean_distance(-16,-3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            if(self.euclidean_distance(-16,-3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(-16,-3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
                 closestBattery.position.x = -16
                 closestBattery.position.y = -3.25
 
             #Saves battery 3 position
-            if(self.euclidean_distance(-15, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < savedEuclidean):
-                savedEuclidean = self.euclidean_distance(-15, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            if(self.euclidean_distance(-15, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(-15, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
                 closestBattery.position.x = -15 
                 closestBattery.position.y = 15.5
 
             #Saves battery 4 position
-            if(self.euclidean_distance(2.75, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < savedEuclidean):
-                savedEuclidean = self.euclidean_distance(2.75, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            if(self.euclidean_distance(2.75, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(2.75, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
                 closestBattery.position.x = 2.75 
                 closestBattery.position.y = 15.5
             
             #Saves battery 5 position
-            if(self.euclidean_distance(16, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < savedEuclidean):
-                savedEuclidean = self.euclidean_distance(16, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            if(self.euclidean_distance(16, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(16, 15.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
                 closestBattery.position.x = 16 
                 closestBattery.position.y = 15.5
 
             #Saves battery 6 position
-            if(self.euclidean_distance(18.25, -3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < savedEuclidean):
-                savedEuclidean = self.euclidean_distance(18.25, -3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            if(self.euclidean_distance(18.25, -3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(18.25, -3.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
                 closestBattery.position.x = 18.25 
                 closestBattery.position.y = -3.25
 
             #Saves battery 7 position
-            if(self.euclidean_distance(12.5, -14.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < savedEuclidean):
-                savedEuclidean = self.euclidean_distance(12.5, -14.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            if(self.euclidean_distance(12.5, -14.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(12.5, -14.5,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
                 closestBattery.position.x = 12.5 
                 closestBattery.position.y = -14.5
             
+            if batteryEuclidean <= 1.1:
+                trackingMode = savedMode
+            
             goal_pose.pose = closestBattery
+
+            #trackingMode = "none"
+
 
         if trackingMode == "selection":
             self.rate = rospy.Rate(0.3) # Hz
@@ -400,19 +429,23 @@ class TrajectoryPlanner:
 
             self.rate = rospy.Rate(60) # Hz
 
-        rospy.loginfo_once(goal_pose.pose)
-
 
         if not self.is_working:
             self.is_working = True
             new_goal = State.robot_pose(goal_pose.pose)
+
             if self.map is not None and self.map.is_allowed(new_goal, self.robot):
                 self.goal = new_goal
-                rospy.loginfo("New goal was set")
-                if self.ready_to_plan() and not self.pathFound:
+                #rospy.loginfo("Goal")
+
+                if self.ready_to_plan():
                     self.replan_message()
+
             else:
-                rospy.logwarn("New goal is bad or no map available")
+                rospy.logwarn("No goal")
+                msg = Float32MultiArray()
+                msg.data = []
+                self.message_publisher.publish(msg)
 
         self.is_working = False
     
@@ -429,11 +462,15 @@ class TrajectoryPlanner:
             new_start = State.robot_pose(start_pose.pose.pose)
             if self.map is not None and self.map.is_allowed(new_start, self.robot):
                 self.start = new_start
-                rospy.loginfo("New start was set")
-                if self.ready_to_plan() and not self.pathFound:
+                #rospy.loginfo("Position")
+
+                if self.ready_to_plan():
                     self.replan_message()
             else:
-                rospy.logwarn("New start is bad or no map available")
+                rospy.logwarn("No position")
+                msg = Float32MultiArray()
+                msg.data = []
+                self.message_publisher.publish(msg)
             self.is_working = False
 
 
@@ -442,34 +479,43 @@ class TrajectoryPlanner:
         if not self.is_working:
             self.is_working = True
             self.map = Map(grid)
-            rospy.loginfo("New map was set")
+            rospy.loginfo("Map set")
             if self.ready_to_plan():
                 self.replan_message()
             self.is_working = False
 
 
     def replan_message(self):
-        rospy.loginfo("Planning was started")
-        final_state = self.planner(self.map, self.Movements, self.robot, self.start, self.goal, self.pose_publisher)
+        global enablePlanning
+        global savedGoal
 
-        if final_state is None:
-            rospy.loginfo("No path found")
-        else:
-            # Restore and publish path
-            rospy.loginfo("Restoring path from final state...")
-            path, theMovements, pathMarker = self.restore_path(final_state)
-            self.path_publisher.publish(pathMarker)
-            #poses = self.order_poses(path)
-            #rospy.loginfo_once(theMovements)
+
+        if savedEuclidean > 0.15 or enablePlanning:
             msg = Float32MultiArray()
-            msg.data = theMovements
+            msg.data = []
             self.message_publisher.publish(msg)
-            #rospy.loginfo(theMovements)
-            self.real_publisher.publish(path)
+            rospy.loginfo("Planning started")
+            final_state = self.planner(self.map, self.Movements, self.robot, self.start, self.goal)
+            rospy.loginfo(savedEuclidean)
+            
+            savedGoal = self.goal
+            self.goal = None
+            self.start = None
+            if final_state is None:
+                rospy.loginfo("No path")
+            else:
+                # Restore and publish path
+                rospy.loginfo("Uploading Path")
+                path, theMovements, pathMarker = self.restore_path(final_state)
+                self.path_publisher.publish(pathMarker)
+                msg.data = theMovements
+                self.message_publisher.publish(msg)
+                self.real_publisher.publish(path)
 
-            rospy.loginfo("Planning was finished...")
-            #self.pathFound = True
-            rospy.loginfo(str(self.pathFound))
+                rospy.loginfo("Planning completed")
+                
+                enablePlanning = False
+                #rospy.loginfo(str(enablePlanning))
 
 
     def restore_path(self, final_state):
@@ -478,6 +524,7 @@ class TrajectoryPlanner:
         pathMarker = MarkerArray()
         theMovements = []
         pose_id = 0
+
         while True:
             pose_marker = current_state.to_marker(self.robot)
             pose_marker.id = pose_id
