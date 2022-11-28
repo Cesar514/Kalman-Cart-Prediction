@@ -1,0 +1,104 @@
+define block model
+(
+  size [2.500 2.500 0.010]
+  gui_nose 0
+  
+  obstacle_return 0
+  ranger_return 0
+  color "spring green"
+)
+
+define topurg ranger
+(
+  sensor (
+    range [ 0 1.2 ]
+    fov 360.0
+    samples 720
+  )
+  # generic model properties
+  color "black"
+  size [ 0.000 0.000 0.100 ]
+  
+)
+
+define humanity ranger
+(
+  sensor (
+    range [ 0 0.5 ]
+    fov 30.0
+    samples 20
+  )
+  # generic model properties
+  color "black"
+  size [ 0.000 0.000 0.100 ]
+)
+
+define pioneer position
+(
+  size [0.500 0.500 0.250]
+  origin [0.000 0.000 0.000 0.000]
+  gui_nose 1
+  gui_return 1
+  drive "diff"
+  topurg(pose [ 0.000 0.000 0.000 0.000 ])
+)
+
+define human position
+(
+  size [0.250 0.250 0.400]
+  origin [0.000 0.000 0.000 0.000]
+  gui_nose 0
+  drive "diff"
+  gui_return 1
+  humanity(pose [ 0.000 0.000 0.000 0.000 ])
+  
+)
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+  gui_move 0
+
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  ranger_return 1.000
+)
+
+# set the resolution of the underlying raytrace model in meters
+resolution 0.05
+
+interval_sim 100  # simulation timestep in milliseconds
+
+
+window
+( 
+  size [ 525 525 ] 
+  rotate [ 3.000 -0.500 ]
+  scale 22.000
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "marketmedium"
+  bitmap "marketmedium.pgm"
+  size [25.000 25.000 0.050]
+  pose [ 0.000 0.000 0.000 0.000 ]
+)
+
+# throw in a robot
+pioneer( pose [ -7.000 3.654 0.000 180.00 ] name "robot" color "blue")
+human( pose [ -3.260 4.306 0.000 90.000 ] name "human" color "red")
+
+# batteries in the map
+block( pose [ 3.500 3.500 0.000 0.000 ] name "batteryOne")
+block( pose [ 6.000 -8.250 0.000 0.000 ] name "batteryTwo")
+block( pose [ -8.000 8.500 0.000 0.000 ] name "batteryThree")
