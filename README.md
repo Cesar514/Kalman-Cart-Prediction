@@ -8,6 +8,8 @@ This environment is supposed to allow path planning and following the human arou
 twist.py
 pathPLanning.py
 robotMove.py
+market.yaml
+market.world
 
 > START ROSCORE
 ```
