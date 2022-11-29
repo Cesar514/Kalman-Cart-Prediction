@@ -5,6 +5,10 @@ Remember to always run chmod+x file.py to make the codes work
 ## Environment ONE Path planning with Position of human with Odometry.
 This environment is supposed to allow path planning and following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot
 
+twist.py
+pathPLanning.py
+robotMove.py
+
 > START ROSCORE
 ```
 cd catkin_ws
