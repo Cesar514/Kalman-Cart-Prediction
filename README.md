@@ -1,13 +1,12 @@
 # Path planning
 
-
-
- 
-Commands list
+##Commands list
 
 % START ROSCORE %
+'
 cd catkin_ws
 roscore
+'
 
 % LOAD MAP DATA %
 crtl + shift + t on terminal (Open a new terminal)
