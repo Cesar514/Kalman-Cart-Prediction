@@ -153,7 +153,7 @@ class TrajectoryTaking:
                     timeZero = rospy.Time.now().to_sec()     
                     timeOne = rospy.Time.now().to_sec()
                     goalReached = True
-                    while((timeOne - timeZero) < 1.2):
+                    while((timeOne - timeZero) < 0.2):
                         timeOne = rospy.Time.now().to_sec()
                         self.roboticSpeed.linear.x = 0
                         self.roboticSpeed.angular.z = 0

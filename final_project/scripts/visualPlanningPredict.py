@@ -477,7 +477,7 @@ class TrajectoryPlanner:
         global savedGoal
 
 
-        if savedEuclidean > 0.5 or enablePlanning:
+        if savedEuclidean > 1.4 or enablePlanning:
             msg = Float32MultiArray()
             msg.data = []
             self.message_publisher.publish(msg)

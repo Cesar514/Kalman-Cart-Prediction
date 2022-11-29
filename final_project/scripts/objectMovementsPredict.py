@@ -226,16 +226,16 @@ def mapCallback(information):
         cx = int((x + x2) / 2)
         cy = int((y + y2) / 2)
 
-        #predicted = kalman.predict(cx, cy)
+        predicted = kalman.predict(cx, cy)
 
-        #for i in range(1):
-            #predicted = kalman.predict(predicted[0], predicted[1])
+        for i in range(1):
+            predicted = kalman.predict(predicted[0], predicted[1])
 
-        #cv2.rectangle(img_bgr, (x, y), (x2, y2), (255, 0, 0), 4)
-        #cv2.circle(img_bgr, (cx, cy), 2, (0, 255, 0), 1)
-        #cv2.circle(img_bgr, (predicted[0], predicted[1]), 3, (255, 0, 0), 4)
+        cv2.rectangle(img_bgr, (x, y), (x2, y2), (255, 0, 0), 4)
+        cv2.circle(img_bgr, (cx, cy), 2, (0, 255, 0), 1)
+        cv2.circle(img_bgr, (predicted[0], predicted[1]), 3, (255, 0, 0), 4)
 
-
+        """ 
         cx = (cx - 250)*0.05
         cy = ((cy*-1)+250)*0.05
 
@@ -243,25 +243,27 @@ def mapCallback(information):
         goal_pose.header.frame_id = "map"
         goal_pose.pose.position.x = cx
         goal_pose.pose.position.y = cy
-
         publishVisual.publish(goal_pose)
+        """
+        
+        cx = (predicted[0] - 250)*0.05
+        cy = ((predicted[1]*-1)+250)*0.05
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = "map"
+        goal_pose.pose.position.x = cx
+        goal_pose.pose.position.y = cy        
+        publishPredicted.publish(goal_pose)
 
-        #cx = (predicted[0] - 250)*0.05
-        #cy = ((predicted[1]*-1)+250)*0.05
-        #goal_pose.pose.position.x = cx
-        #goal_pose.pose.position.y = cy        
-        #publishPredicted.publish(goal_pose)
         #rospy.loginfo("This is X: " + str(cx) + "This is Y: " + str(cy))
         #rospy.loginfo("This is Kalman X: " + str(predicted[0]) + "This is Kalman Y: " + str(predicted[1]))
 
-        #cv2.imshow("Frame", img_bgr)
+        cv2.imshow("Frame", img_bgr)
 
         if received == False:
-            #cv2.moveWindow("Frame", 800, 700)
+            cv2.moveWindow("Frame", 800, 700)
             received = True
 
-
-        key = cv2.waitKey(60)
+        key = cv2.waitKey(1000)
         if key == 27:
             break
 

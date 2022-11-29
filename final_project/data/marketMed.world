@@ -86,12 +86,13 @@ window
   scale 22.000
 )
 
+
 # load an environment bitmap
 floorplan
 ( 
   name "marketmedium"
   bitmap "marketmedium.pgm"
-  size [25.000 25.000 0.050]
+  size [25.000 25.000 0.50]
   pose [ 0.000 0.000 0.000 0.000 ]
 )
 

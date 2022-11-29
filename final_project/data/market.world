@@ -90,7 +90,7 @@ floorplan
 ( 
   name "market"
   bitmap "market.pgm"
-  size [42.000 40.000 0.050]
+  size [42.000 40.000 0.50]
   pose [ 0.000 0.000 0.000 0.000 ]
 )
 

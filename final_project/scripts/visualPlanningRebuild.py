@@ -29,7 +29,7 @@ savedMode = trackingMode
 
 
 myClickedPoint = Point()
-distance = 0.3 #Distance from objective
+distance = 0.7 #Distance from objective
 varDist = 0.1 #Distance from exact position each step
 
 savedGoal = None
@@ -272,12 +272,12 @@ class TrajectoryPlanner:
         self.pathFound = False
             # forward #backward #right90 # left90
         self.Movements = [Moving(0.1, 0), Moving(-0.1, 0), Moving(0, -1.5708), Moving(0, 1.5708)] 
-        self.robot = Robot(1.1, 1.1)
+        self.robot = Robot(1, 1)
         self.is_working = False
         self.currentRobotPosition = Pose()
 
         # Subscribes to the map
-        self.map_subscriber = rospy.Subscriber("map", OccupancyGrid, self.new_map_callback)
+        self.map_subscriber = rospy.Subscriber("mapTwo", OccupancyGrid, self.new_map_callback)
 
         # Subscribes to REAL robot position
         self.start_subscriber = rospy.Subscriber("robotReal", Odometry, self.new_start_callback) #Get's the real position of robot
@@ -347,7 +347,7 @@ class TrajectoryPlanner:
             goal_pose = PoseStamped()
             goal_pose.header = myGoal.header
             goal_pose.pose = myGoal.pose
-            distance = 0.12
+            distance = 0.15
             varDist = 0.1
         
         if trackingMode == "paying":
@@ -390,7 +390,7 @@ class TrajectoryPlanner:
                 closestBattery.position.x = -8.000
                 closestBattery.position.y = 7.000
             
-            if batteryEuclidean <= 1.7:
+            if batteryEuclidean <= 1.1:
                 trackingMode = savedMode
                 batteryTotal = 100.0
             
@@ -426,9 +426,9 @@ class TrajectoryPlanner:
 
             else:
                 rospy.logwarn("No goal")
-                #msg = Float32MultiArray()
-                #msg.data = []
-                #self.message_publisher.publish(msg)
+                msg = Float32MultiArray()
+                msg.data = []
+                self.message_publisher.publish(msg)
 
         self.is_working = False
     
@@ -451,9 +451,9 @@ class TrajectoryPlanner:
                     self.replan_message()
             else:
                 rospy.logwarn("No position")
-                #msg = Float32MultiArray()
-                #msg.data = []
-                #self.message_publisher.publish(msg)
+                msg = Float32MultiArray()
+                msg.data = []
+                self.message_publisher.publish(msg)
             self.is_working = False
 
 
@@ -477,7 +477,7 @@ class TrajectoryPlanner:
         global savedGoal
 
 
-        if savedEuclidean > 0.5 or enablePlanning:
+        if savedEuclidean > 0.3 or enablePlanning:
             msg = Float32MultiArray()
             msg.data = []
             self.message_publisher.publish(msg)
