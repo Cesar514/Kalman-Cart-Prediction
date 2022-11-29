@@ -88,6 +88,7 @@ rosrun map_server map_server src/final_project/data/marketMed.yaml
 source devel/setup.bash
 rosrun stage_ros stageros src/final_project/data/marketMed.world
 ```
+Remember to Zoom out a little bit press view, and disable clock and grid. Should reposition window based on computer vision.
 > START TELEOP SCRIPT
 ```
 source devel/setup.bash
@@ -154,6 +155,7 @@ rosrun map_server map_server src/final_project/data/marketMed.yaml
 source devel/setup.bash
 rosrun stage_ros stageros src/final_project/data/marketMed.world
 ```
+Remember to Zoom out a little bit press view, and disable clock and grid. Should reposition window based on computer vision.
 > START TELEOP SCRIPT
 ```
 source devel/setup.bash
@@ -218,6 +220,7 @@ rosrun map_server map_server src/final_project/data/marketMed.yaml
 ```
 source devel/setup.bash
 rosrun stage_ros stageros src/final_project/data/marketMed.world
+Remember to Zoom out a little bit press view, and disable clock and grid. Should reposition window based on computer vision.
 ```
 > START TELEOP SCRIPT
 ```
@@ -284,6 +287,7 @@ rosrun map_server map_server src/final_project/data/marketMed.yaml
 source devel/setup.bash
 rosrun stage_ros stageros src/final_project/data/marketMed.world
 ```
+Remember to Zoom out a little bit press view, and disable clock and grid. Should reposition window based on computer vision.
 > START TELEOP SCRIPT
 ```
 source devel/setup.bash
