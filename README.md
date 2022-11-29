@@ -200,7 +200,7 @@ rosrun final_project visualPlanningPredict.py
 This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
 twist.py
-visualPlanning.py
+visualPlanningRebuild.py
 robotMoveVisual.py
 objectMovementsRebuild.py
 marketMed.yaml
@@ -259,14 +259,14 @@ rosrun final_project objectMovementsRebuild.py
 Initial path planning Algorithm
 ```
 source devel/setup.bash
-rosrun final_project visualPlanning.py
+rosrun final_project visualPlanningRebuild.py
 ```
 
 ## Environment FIVE Visual path planning with Obstacles Update and prediction(MAP 500x500)
 This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
 twist.py
-visualPlanning.py
+visualPlanningFull.py
 robotMoveVisual.py
 objectMovementsFull.py
 marketMed.yaml
@@ -325,7 +325,7 @@ rosrun final_project objectMovementsFull.py
 Initial path planning Algorithm
 ```
 source devel/setup.bash
-rosrun final_project visualPlanning.py
+rosrun final_project visualPlanningFull.py
 '''
 
 ### EXTRA Test Worlds (LARGE) for testing positions
