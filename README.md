@@ -38,7 +38,8 @@ Then open a new terminal
 source devel/setup.bash
 rosrun final_project twist.py
 ```
-After this you can go to teleop window to move human
+> Change parameters inside this function to account for human speed.
+After this you can go to teleop window to move human. 
 
 > SEE CONNECTED NODES
 ```
