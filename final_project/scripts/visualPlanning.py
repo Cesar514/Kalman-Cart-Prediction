@@ -272,18 +272,21 @@ class TrajectoryPlanner:
         self.pathFound = False
             # forward #backward #right90 # left90
         self.Movements = [Moving(0.1, 0), Moving(-0.1, 0), Moving(0, -1.5708), Moving(0, 1.5708)] 
-        self.robot = Robot(0.85, 0.85)
+        self.robot = Robot(1, 1)
         self.is_working = False
         self.currentRobotPosition = Pose()
 
         # Subscribes to the map
-        self.map_subscriber = rospy.Subscriber("map", OccupancyGrid, self.new_map_callback)
+        self.map_subscriber = rospy.Subscriber("mapTwo", OccupancyGrid, self.new_map_callback)
 
         # Subscribes to REAL robot position
         self.start_subscriber = rospy.Subscriber("robotReal", Odometry, self.new_start_callback) #Get's the real position of robot
         
         # Subscribes to REAL human position
-        self.goal_subscriber = rospy.Subscriber("humanReal", Odometry, self.new_goal_callback) #Path plans for human
+        #self.goal_subscriber = rospy.Subscriber("humanReal", Odometry, self.new_goal_callback) #Path plans for human
+
+        # Subscribes to human visual tracking
+        self.goal_subscriber = rospy.Subscriber("visualReal", PoseStamped, self.new_goal_callback) #Path plans for human
 
         # Subscribes to clicked point
         self.map_subscriber = rospy.Subscriber("/clicked_point", PointStamped, self.saved_point)
@@ -343,7 +346,7 @@ class TrajectoryPlanner:
         if trackingMode == "human":
             goal_pose = PoseStamped()
             goal_pose.header = myGoal.header
-            goal_pose.pose = myGoal.pose.pose
+            goal_pose.pose = myGoal.pose
             distance = 0.15
             varDist = 0.1
         
@@ -365,27 +368,27 @@ class TrajectoryPlanner:
             varDist = 0.0999
 
             """
-            Battery1 (-8.3, 6.4)
-            Battery2 (7.85, 6.25)
-            Battery3 (4.4, -8.7)
+            Battery1 (5.000, 3.400)
+            Battery2 (4.240, -7.740)
+            Battery3 (-8.000, 7.000)
             
             """
             #Saves battery 1 position
-            batteryEuclidean = self.euclidean_distance(-8.3, 6.4,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
-            closestBattery.position.x = -8.3
-            closestBattery.position.y = 6.4
+            batteryEuclidean = self.euclidean_distance(5.000, 3.400,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+            closestBattery.position.x = 5.000
+            closestBattery.position.y = 3.400
             
             #Saves battery 2 position
-            if(self.euclidean_distance(7.85, 6.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
-                batteryEuclidean = self.euclidean_distance(7.85, 6.25,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
-                closestBattery.position.x = 7.85
-                closestBattery.position.y = 6.25
+            if(self.euclidean_distance(4.240, -7.740,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(4.240, -7.740,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+                closestBattery.position.x = 4.240
+                closestBattery.position.y = -7.740
 
             #Saves battery 3 position
-            if(self.euclidean_distance(4.4, -8.7,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
-                batteryEuclidean = self.euclidean_distance(4.4, -8.7,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
-                closestBattery.position.x = 4.4
-                closestBattery.position.y = -8.7
+            if(self.euclidean_distance(-8.000, 7.000,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y) < batteryEuclidean):
+                batteryEuclidean = self.euclidean_distance(-8.000, 7.000,self.currentRobotPosition.position.x, self.currentRobotPosition.position.y)
+                closestBattery.position.x = -8.000
+                closestBattery.position.y = 7.000
             
             if batteryEuclidean <= 1.1:
                 trackingMode = savedMode
@@ -456,13 +459,17 @@ class TrajectoryPlanner:
 
 
     def new_map_callback(self, grid):
-        if not self.is_working:
+        self.is_working = True
+        self.map = Map(grid)
+        rospy.Rate(1).sleep()
+        
+        """ if not self.is_working:
             self.is_working = True
             self.map = Map(grid)
             rospy.loginfo("Map set")
             if self.ready_to_plan():
                 self.replan_message()
-            self.is_working = False
+            self.is_working = False """
 
 
     def replan_message(self):
@@ -470,7 +477,7 @@ class TrajectoryPlanner:
         global savedGoal
 
 
-        if savedEuclidean > 0.15 or enablePlanning:
+        if savedEuclidean > 0.3 or enablePlanning:
             msg = Float32MultiArray()
             msg.data = []
             self.message_publisher.publish(msg)

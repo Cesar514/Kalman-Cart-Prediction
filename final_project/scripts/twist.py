@@ -23,7 +23,7 @@ def talker():
         rospy.spin()
 
 def human_move(self, movementPub):
-    self.linear.x = self.linear.x*0.1
+    self.linear.x = self.linear.x*2
     self.linear.y = self.linear.y*0.1
     self.angular.z = self.angular.z
     movementPub.publish(self)

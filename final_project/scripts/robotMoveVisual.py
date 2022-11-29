@@ -40,6 +40,8 @@ class TrajectoryTaking:
         self.position_saving = rospy.Subscriber("robotReal", Odometry, self.save_odometryValues, queue_size=1, buff_size=2**24) # Get's the real position of robot
         self.position_subscriber = rospy.Subscriber("robotReal", Odometry, self.robot_movements, (robotMovementPub), queue_size=1, buff_size=2**24) #Published Data
 
+        
+
         self.rate = rospy.Rate(60) # 60 Hz
         #self.rate.sleep() # Sleeps for 1/HZ rate sec
 
