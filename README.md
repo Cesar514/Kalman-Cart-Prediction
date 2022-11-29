@@ -2,63 +2,64 @@
 
 ## Commands list
 
-### START ROSCORE
+## Environment ONE Path planning with Position of human with Odometry.
+This environment is supposed to allow path planning and following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot
 
+> START ROSCORE
 ```
 cd catkin_ws
 roscore
 ```
-
-### LOAD MAP DATA
-> crtl + shift + t on terminal (Open a new terminal)
+> LOAD MAP DATA
+Then open a new terminal
 ```
 rosrun map_server map_server src/final_project/data/market.yaml
 ```
-
-### LOAD MAP SCREEN%
-> crtl + shift + t on terminal (Open a new terminal)
+> LOAD MAP SCREEN
+Then open a new terminal
 ```
 rosrun stage_ros stageros src/final_project/data/market.world
 ```
-
-### START TELEOP SCRIPT
-> crtl + shift + t on terminal (Open a new terminal)
+> START TELEOP SCRIPT
+Then open a new terminal
 ```
-cd ..
-catkin_make
 source devel/setup.bash
 roslaunch socspioneer keyboard_teleop.launch
 ```
-
-### START HUMAN MOVEMENT SCRIPT%
-> crtl + shift + t on terminal (Open a new terminal)
+> START HUMAN MOVEMENT SCRIPT
+Then open a new terminal
 ```
 source devel/setup.bash
 rosrun final_project twist.py
 ```
-> After this you can go to teleop window to move human
+After this you can go to teleop window to move human
 
-### SEE CONNECTED NODES
+> SEE CONNECTED NODES
 ```
 rosrun rqt_graph rqt_graph
 ```
 
-### START RVIZ
+> START RVIZ
 ```
 rosrun rviz rviz
 ```
-
-### RUN ROBOT CONTROL
+Be sure to load the corresponding .rviz file to get needed information displayed
+> RUN ROBOT CONTROL
+This allows the robot to be controlled by the algorithms
 ```
 source devel/setup.bash
 rosrun final_project robotMove.py
 ```
-
-### RUN ASTAR
+> RUN ASTAR
+Initial path planning Algorithm
 ```
 source devel/setup.bash
 rosrun final_project pathPlanning.py
 ```
+## Environment TWO Visual path planning (MAP 500x599)
+This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
+
+
 
 ### ASTAR FOR MED MAP, PATH PLANNING
 ```
