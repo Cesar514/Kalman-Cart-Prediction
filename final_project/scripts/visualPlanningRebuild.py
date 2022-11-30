@@ -40,6 +40,8 @@ batteryTotal = 100.00
 batteryTimeIn = 0
 batteryTimeOut = 0 
 minimunBattery = 30
+
+savedOccupancyGrid = OccupancyGrid()
 #minimunBattery = -1000000000
 with open('src/final_project/scripts/battery.txt', 'rb') as f:
     batteryTotal = pickle.load(f)
@@ -272,7 +274,7 @@ class TrajectoryPlanner:
         self.pathFound = False
             # forward #backward #right90 # left90
         self.Movements = [Moving(0.1, 0), Moving(-0.1, 0), Moving(0, -1.5708), Moving(0, 1.5708)] 
-        self.robot = Robot(1, 1)
+        self.robot = Robot(1.1, 1.1)
         self.is_working = False
         self.currentRobotPosition = Pose()
 
@@ -390,7 +392,7 @@ class TrajectoryPlanner:
                 closestBattery.position.x = -8.000
                 closestBattery.position.y = 7.000
             
-            if batteryEuclidean <= 1.1:
+            if batteryEuclidean <= 1.7:
                 trackingMode = savedMode
                 batteryTotal = 100.0
             
@@ -459,17 +461,23 @@ class TrajectoryPlanner:
 
 
     def new_map_callback(self, grid):
-        self.is_working = True
-        self.map = Map(grid)
-        rospy.Rate(1).sleep()
+        global savedOccupancyGrid, enablePlanning
         
-        """ if not self.is_working:
-            self.is_working = True
-            self.map = Map(grid)
-            rospy.loginfo("Map set")
-            if self.ready_to_plan():
-                self.replan_message()
-            self.is_working = False """
+        if savedOccupancyGrid.data != grid.data:
+            savedOccupancyGrid = grid
+            rospy.loginfo("Map Changed")
+            
+            enablePlanning = True
+            #self.replan_message()
+            if not self.is_working:
+                self.is_working = True
+                self.map = Map(grid)
+                rospy.loginfo("Map set")
+                if self.ready_to_plan():
+                    self.replan_message()
+                self.is_working = False
+
+        
 
 
     def replan_message(self):

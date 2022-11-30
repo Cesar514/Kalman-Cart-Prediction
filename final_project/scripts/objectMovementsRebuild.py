@@ -13,6 +13,7 @@ from nav_msgs.msg import OccupancyGrid
 originalMap = OccupancyGrid()
 received = False
 originalMapCopy = OccupancyGrid()
+globalMapSaved = OccupancyGrid()
 
 class humanDetector:
     def __init__(self):
@@ -100,7 +101,7 @@ class KalmanFilter:
         return x, y
 
 def mapCallback(information):
-    global originalMap, received
+    global originalMap, received, globalMapSaved
 
     originalMap = information
 
@@ -204,7 +205,7 @@ def mapCallback(information):
 
         myMap = OccupancyGrid()
         #myMap = originalMapCopy
-        #myMap.header = "mapTwo"
+        #myMap.header.frame_id = "mapTwo"
         origin = Pose()
         origin.position.x = -12.5
         origin.position.y = -12.5
@@ -214,7 +215,10 @@ def mapCallback(information):
         myMap.info.origin = origin
         myMap.data = newMask
 
-        publishMap.publish(myMap)
+
+        if myMap != globalMapSaved:
+            globalMapSaved = myMap
+            publishMap.publish(myMap)
         
 
         red_box = redDetection.detect(img_bgr)
@@ -223,14 +227,14 @@ def mapCallback(information):
         cx = int((x + x2) / 2)
         cy = int((y + y2) / 2)
 
-        predicted = kalman.predict(cx, cy)
+        #predicted = kalman.predict(cx, cy)
 
-        for i in range(1):
-            predicted = kalman.predict(predicted[0], predicted[1])
+        #for i in range(1):
+            #predicted = kalman.predict(predicted[0], predicted[1])
 
         #cv2.rectangle(img_bgr, (x, y), (x2, y2), (255, 0, 0), 4)
         cv2.circle(img_bgr, (cx, cy), 2, (0, 255, 0), 1)
-        cv2.circle(img_bgr, (predicted[0], predicted[1]), 3, (255, 0, 0), 4)
+        #cv2.circle(img_bgr, (predicted[0], predicted[1]), 3, (255, 0, 0), 4)
 
 
         cx = (cx - 250)*0.05
@@ -239,7 +243,7 @@ def mapCallback(information):
         goal_pose = PoseStamped()
         goal_pose.pose.position.x = cx
         goal_pose.pose.position.y = cy
-
+        goal_pose.header.frame_id = "map"
         publishVisual.publish(goal_pose)
 
         #cx = (predicted[0] - 250)*0.05
@@ -257,7 +261,7 @@ def mapCallback(information):
             received = True
 
 
-        key = cv2.waitKey(60)
+        key = cv2.waitKey(100)
         if key == 27:
             break
 
