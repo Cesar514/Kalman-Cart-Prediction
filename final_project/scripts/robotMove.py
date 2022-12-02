@@ -168,7 +168,7 @@ class TrajectoryTaking:
                 rospy.Rate(10)
                 self.rate.sleep()
                 #self.path.poses.pop(0)
-                self.movementList.pop(0)
+                self.movementList.pop(0) 
 
 
             #self.looping(currentNumberPoses, savedX, savedY, savedYaw, self.movementList[0][0], self.movementList[0][1], pub)

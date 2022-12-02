@@ -110,8 +110,8 @@ floorplan
 pioneer( pose [ -7.63 -5.320 0.000 180.00 ] name "robot" color "blue")
 human( pose [ -4.02 -7.250 0.000 90.000 ] name "human" color "red")
 obstacle( pose [ -5.35 -9.380 0.000 90.000 ] name "block1" color "DimGray")
-obstacle( pose [ -5.35 -9.380 0.000 90.000 ] name "block2" color "DimGray")
-obstacle( pose [ -5.35 -9.380 0.000 90.000 ] name "block3" color "DimGray")
+#obstacle( pose [ -5.35 -9.380 0.000 90.000 ] name "block2" color "DimGray")
+#obstacle( pose [ -5.35 -9.380 0.000 90.000 ] name "block3" color "DimGray")
 
 # batteries in the map
 block( pose [ 5.000 3.400 0.000 0.000 ] name "batteryOne")

@@ -174,7 +174,26 @@ class TrajectoryTaking:
 
 
             #self.looping(currentNumberPoses, savedX, savedY, savedYaw, self.movementList[0][0], self.movementList[0][1], pub)
-        
+            
+              
+
+
+    
+
+        """
+        while((timeOne - timeZero) < 1/speed):
+                pub.publish(self.roboticSpeed)
+                timeOne = rospy.Time.now().to_sec()
+                start_pose.pose = humanMove.pose
+                
+                if currentNumberPoses != len(self.movementList):
+                    
+                    break
+
+                #if currentNumberPoses != len(self.path.poses):
+                    #break
+        return
+        """
 
 
 

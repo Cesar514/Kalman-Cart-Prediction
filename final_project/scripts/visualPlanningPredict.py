@@ -41,6 +41,9 @@ batteryTimeIn = 0
 batteryTimeOut = 0 
 minimunBattery = 30
 #minimunBattery = -1000000000
+
+
+
 with open('src/final_project/scripts/battery.txt', 'rb') as f:
     batteryTotal = pickle.load(f)
 

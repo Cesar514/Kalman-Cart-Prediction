@@ -48,8 +48,8 @@ with open('src/final_project/scripts/battery.txt', 'rb') as f:
 class Moving:
     """This is for the movements the robot takes, line"""
     def __init__(self, length=0, thetaDistance=0):
-        self.length = length
-        self.thetaDistance = thetaDistance
+        self.length = length #This is going to use in each step the robot takes
+        self.thetaDistance = thetaDistance #The distance 
 
 class Robot:
     """"This is the information of the robot, height and width (in X and Y), not including how tall in Z"""
@@ -121,10 +121,10 @@ class State:
         return newState # returns the new state of the robot
 
     def eucl_dist(self, theGoal):
-        if calcMode == "euclidean":
-            return ((self.x - theGoal.x)**2 + (self.y - theGoal.y)**2)**0.5 # euclidean distance sqrt(x^2 + y^2)
-        if calcMode == "manhattan":
-            return abs(self.x - theGoal.x) + abs(self.y - theGoal.y)  # euclidean distance abs(x-x) + abs(y-y)
+        if calcMode == "euclidean": # euclidean distance sqrt(x^2 + y^2)
+            return ((self.x - theGoal.x)**2 + (self.y - theGoal.y)**2)**0.5 
+        if calcMode == "manhattan":# euclidean distance abs(x-x) + abs(y-y)
+            return abs(self.x - theGoal.x) + abs(self.y - theGoal.y)  
         if calcMode == "average":
             return (abs(self.x - theGoal.x) + abs(self.y - theGoal.y) + ((self.x - theGoal.x)**2 + (self.y - theGoal.y)**2)**0.5)/2  #euclidean+manhattan/2
 

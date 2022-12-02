@@ -274,7 +274,7 @@ class TrajectoryPlanner:
         self.pathFound = False
             # forward #backward #right90 # left90
         self.Movements = [Moving(0.1, 0), Moving(-0.1, 0), Moving(0, -1.5708), Moving(0, 1.5708)] 
-        self.robot = Robot(0.85, 0.85)
+        self.robot = Robot(1.1, 1.1)
         self.is_working = False
         self.currentRobotPosition = Pose()
 
