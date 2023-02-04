@@ -1,5 +1,7 @@
 # Path planning
 
+[More information about the project here](https://github.com/Cesar514/Kalman-Cart-Prediction/blob/main/Path%20Planning%20Prediction.pdf)
+
 ## Commands list
 Remember to always run chmod+x file.py to make the codes work
 ## Environment ONE Path planning with Position of human with Odometry.
