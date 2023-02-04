@@ -13,6 +13,8 @@ robotMove.py
 market.yaml
 market.world
 
+![Map](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/map1.png)
+
 > START ROSCORE
 ```
 cd catkin_ws
@@ -65,6 +67,10 @@ Initial path planning Algorithm
 source devel/setup.bash
 rosrun final_project pathPlanning.py
 ```
+
+![Path Planning in system](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/path1.png)
+
+
 ## Environment TWO Visual path planning (MAP 500x500)
 This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
