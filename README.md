@@ -211,6 +211,8 @@ rosrun final_project visualPlanningPredict.py
 ## Environment FOUR Visual path planning with Obstacles Update (MAP 500x500)
 This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
+![RVIZ Rebuild](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/rviz%20rebuild.png)
+
 twist.py
 visualPlanningRebuild.py
 robotMoveVisual.py
@@ -266,6 +268,10 @@ rosrun final_project robotMoveVisual.py
 source devel/setup.bash
 rosrun final_project objectMovementsRebuild.py
 ```
+
+![Rebuild 1](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/rebuild2.png)
+
+![Rebuild 2](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/rebuild3.png)
 
 > RUN ASTAR FOR VISUAL PLANNING
 Initial path planning Algorithm
