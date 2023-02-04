@@ -16,7 +16,7 @@ market.world
 ![Map](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/map1.png)
 
 
-![ Path Planning ROS using A VIDEO* ](https://www.youtube.com/watch?v=Qydd7Z2ho-A "Path Planning ROS using A*")
+[![ Path Planning ROS using A* VIDEO ](//img.youtube.com/watch?v=Qydd7Z2ho-A.jpg)](//www.youtube.com/watch?v=Qydd7Z2ho-A "Path Planning ROS using A*")
 
 > START ROSCORE
 ```
