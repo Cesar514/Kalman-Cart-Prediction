@@ -5,6 +5,9 @@
 ## Commands list
 Remember to always run chmod+x file.py to make the codes work
 ## Environment ONE Path planning with Position of human with Odometry.
+
+[![ Path Planning ROS using A* VIDEO ](//img.youtube.com/watch?v=Qydd7Z2ho-A.jpg)](//www.youtube.com/watch?v=Qydd7Z2ho-A "Path Planning ROS using A*")
+
 This environment is supposed to allow path planning and following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot
 
 twist.py
@@ -16,7 +19,6 @@ market.world
 ![Map](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/map1.png)
 
 
-[![ Path Planning ROS using A* VIDEO ](//img.youtube.com/watch?v=Qydd7Z2ho-A.jpg)](//www.youtube.com/watch?v=Qydd7Z2ho-A "Path Planning ROS using A*")
 
 > START ROSCORE
 ```
@@ -73,11 +75,11 @@ rosrun final_project pathPlanning.py
 
 ![Path Planning in system](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/path1.png)
 
-[![Path Planning A* Using Computer Vision VIDEO ](//img.youtube.com/watch?v=VMVFwwzJzbs.jpg)](//www.youtube.com/watch?v=VMVFwwzJzbs "Path Planning A* Using Computer Vision")
-
-
 
 ## Environment TWO Visual path planning (MAP 500x500)
+
+[![Path Planning A* Using Computer Vision VIDEO ](//img.youtube.com/watch?v=VMVFwwzJzbs.jpg)](//www.youtube.com/watch?v=VMVFwwzJzbs "Path Planning A* Using Computer Vision")
+
 This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
 ![Map 2](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/map2.png)
@@ -147,11 +149,12 @@ rosrun final_project visualPlanning.py
 
 
 ## Environment THREE Visual path planning with prediction (MAP 500x500)
+
+[![Robot Path Planning using Kalman Filter and A* VIDEO ](//img.youtube.com/watch?v=jBE8TFCen_Y.jpg)](//www.youtube.com/watch?v=jBE8TFCen_Y "Robot Path Planning using Kalman Filter and A*")
+
 This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
 ![Predicting](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/prediction1.png)
-
-[![Robot Path Planning using Kalman Filter and A* VIDEO ](//img.youtube.com/watch?v=jBE8TFCen_Y.jpg)](//www.youtube.com/watch?v=jBE8TFCen_Y "Robot Path Planning using Kalman Filter and A*")
 
 twist.py
 visualPlanningPredict.py
@@ -217,13 +220,12 @@ rosrun final_project visualPlanningPredict.py
 ```
 
 ## Environment FOUR Visual path planning with Obstacles Update (MAP 500x500)
-This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
-
-![RVIZ Rebuild](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/rviz%20rebuild.png)
 
 [![Cart Following with Kalman Filter and Map Rebuilding ROS VIDEO ](//img.youtube.com/watch?v=i5mGuChcznE.jpg)](//www.youtube.com/watch?v=i5mGuChcznE "Cart Following with Kalman FIlter and Map Rebuilding ROS")
 
+This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
 
+![RVIZ Rebuild](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/rviz%20rebuild.png)
 
 twist.py
 visualPlanningRebuild.py
