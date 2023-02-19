@@ -152,7 +152,7 @@ rosrun final_project visualPlanning.py
 
 [![Robot Path Planning using Kalman Filter and A* VIDEO ](//img.youtube.com/watch?v=jBE8TFCen_Y.jpg)](//www.youtube.com/watch?v=jBE8TFCen_Y "Robot Path Planning using Kalman Filter and A*")
 
-This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
+This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. In this case we are making a prediction with the Kalman Filter for the future position.
 
 ![Predicting](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/prediction1.png)
 
@@ -223,7 +223,7 @@ rosrun final_project visualPlanningPredict.py
 
 [![Cart Following with Kalman Filter and Map Rebuilding ROS VIDEO ](//img.youtube.com/watch?v=i5mGuChcznE.jpg)](//www.youtube.com/watch?v=i5mGuChcznE "Cart Following with Kalman FIlter and Map Rebuilding ROS")
 
-This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. After this if the user starts the operation of "To paying area" the robot should be able to go to the paying area. When the battery is low, the robot goes to the closest battery station.
+This environment is supposed to allow path planning giving position of human based on camera robot should be following the human around. In this case we are making a prediction with the Kalman Filter for the future position. Objects that appear in real life on the map, should update in the grid map.
 
 ![RVIZ Rebuild](https://raw.githubusercontent.com/Cesar514/Kalman-Cart-Prediction/main/final_project/rviz%20rebuild.png)
 
